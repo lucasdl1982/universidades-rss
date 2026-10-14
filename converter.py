@@ -152,6 +152,17 @@ def extract_article(page_html, url):
 
     # Seletor confirmado no código-fonte do ICMC-USP.
     node = soup.select_one(".noticias-texto")
+    
+    LOG.warning(
+        "DIAGNOSTICO %s: noticias-texto=%s, "
+        "noticias=%d, paragrafos=%d, html=%d caracteres",
+        url,
+        node is not None,
+        len(soup.select("[class*='noticia']")),
+        len(soup.select("p")),
+        len(page_html),
+    )
+
 
     if node is None:
         LOG.warning(

@@ -225,13 +225,17 @@ def extract_article(page_html, url):
             if attr not in permitted:
                 del tag.attrs[attr]
 
-    # Preserva o HTML interno da reportagem.
-    root = content.select_one(".noticias-texto")
+    # O elemento principal já foi encontrado antes.
+    # Não depende mais do atributo class, que foi removido.
+    root = content.find("div")
 
     if root is None:
         body_html = ""
     else:
-        body_html = "".join(str(child) for child in root.contents)
+        body_html = "".join(
+            str(child) for child in root.contents
+        )
+
 
     # Remove conteúdo composto apenas por espaços.
     plain = BeautifulSoup(

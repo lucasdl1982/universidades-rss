@@ -1,0 +1,63 @@
+
+name: Atualizar feeds universitarios
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  gerar-e-publicar:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Baixar arquivos do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Gerar feeds RSS
+        run: python converter.py
+
+      - name: Preparar arquivos para publicacao
+        run: |
+          mkdir -p public
+          find . -type f -name "*.xml" \
+            -not -path "./.git/*" \
+            -not -path "./public/*" \
+            -exec cp {} public/ \;
+          touch public/.nojekyll
+          echo "Arquivos gerados:"
+          ls -lah public/
+
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar arquivos para GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Publicar GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

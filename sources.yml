@@ -1,0 +1,11 @@
+feeds:
+  - id: icmc-usp
+    title: "ICMC-USP — Notícias"
+    url: "https://www.icmc.usp.br/noticias"
+    description: "Notícias do Instituto de Ciências Matemáticas e de Computação da USP"
+    link_prefix: "/noticias/"
+  - id: icmc-usp-pesquisa
+    title: "ICMC-USP — Pesquisa"
+    url: "https://www.icmc.usp.br/noticias/pesquisa"
+    description: "Notícias de pesquisa do ICMC-USP"
+    link_prefix: "/noticias/"
